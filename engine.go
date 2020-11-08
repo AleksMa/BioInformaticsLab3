@@ -18,17 +18,21 @@ type NeedlemanWunsch struct {
 	GapValue     int
 }
 
-func NewNeedlemanWunsch(first, second *Sequence, sf ScoringFunc, GapValue int) *NeedlemanWunsch {
+func NewNeedlemanWunsch(first, second *Sequence, sf ScoringFunc, GapValue int, open, extend int) *NeedlemanWunsch {
 	nw := &NeedlemanWunsch{
 		TopSequence:  second,
 		LeftSequence: first,
 		Result:       make(Matrix, len(first.Value)+1),
-		M: make([][]int, len(first.Value)+1),
-		I: make([][]int, len(first.Value)+1),
-		D: make([][]int, len(first.Value)+1),
+		M:            make([][]int, len(first.Value)+1),
+		I:            make([][]int, len(first.Value)+1),
+		D:            make([][]int, len(first.Value)+1),
 		SF:           sf,
 		GapValue:     GapValue,
 	}
+
+	Open = open
+	Extend = extend
+
 	// Аллоцируем первую строку
 	nw.Result[0] = make(Line, len(second.Value)+1)
 	nw.M[0] = make([]int, len(second.Value)+1)
@@ -158,7 +162,7 @@ func (nw *NeedlemanWunsch) determine(i, j int) {
 	}
 
 	if i > 0 && j > 0 {
-		nw.determine(i-1,j-1)
+		nw.determine(i-1, j-1)
 		m1 := nw.M[i-1][j-1] + nw.SF[nw.LeftSequence.Value[i-1]][nw.TopSequence.Value[j-1]]
 		m2 := nw.I[i-1][j-1] + nw.SF[nw.LeftSequence.Value[i-1]][nw.TopSequence.Value[j-1]]
 		m3 := nw.D[i-1][j-1] + nw.SF[nw.LeftSequence.Value[i-1]][nw.TopSequence.Value[j-1]]
@@ -170,7 +174,7 @@ func (nw *NeedlemanWunsch) determine(i, j int) {
 	gap2, gap3 := false, false
 
 	if j > 0 {
-		nw.determine(i,j-1)
+		nw.determine(i, j-1)
 		m1 := nw.I[i][j-1] + Extend
 		m2 := nw.M[i][j-1] + Open
 		m3 := nw.D[i][j-1] + Open
@@ -183,7 +187,7 @@ func (nw *NeedlemanWunsch) determine(i, j int) {
 	}
 
 	if i > 0 {
-		nw.determine(i-1,j)
+		nw.determine(i-1, j)
 		m1 := nw.D[i-1][j] + Extend
 		m2 := nw.M[i-1][j] + Open
 		m3 := nw.I[i-1][j] + Open

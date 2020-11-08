@@ -2,7 +2,7 @@
 Как запускать:
 ```bash
 go build -o lab1 *.go
-./lab1 [--gap <gap_value>] [--mode {simple|dnafull|blosum62}] [--out <output_file] <input_file_1> [<input_file_2>]
+./lab1 [--gap <gap_value>] [--open <open_value>] [--extend <extend_value>] [--mode {simple|dnafull|blosum62}] [--out <output_file] <input_file_1> [<input_file_2>]
 ```
 `input_file_2` может быть опущен - в этом случае обе последовательности должны находиться в первом файле.
 
@@ -16,7 +16,3 @@ go build -o lab1 *.go
 go test .
 ```
 Рассматриваются различные размеры последовательностей РНК и белков, проверяется правильность постройки глобального выравнивания и скора. 
-
-## Предыдущий прогресс
-Ранее разрабатывал в репозитории https://github.com/AleksMa/BioInformatics/tree/master/Lab1  
-Из-за проблем со сборкой переместился в текущий репозиторий.

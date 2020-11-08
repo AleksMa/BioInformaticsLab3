@@ -12,12 +12,16 @@ import (
 var (
 	inputFiles []string
 	gap        int
+	open       int
+	extend     int
 	outputFile string
-	mode string
+	mode       string
 )
 
 func init() {
 	flag.IntVar(&gap, "gap", -10, "gap value")
+	flag.IntVar(&open, "open", -10, "open value")
+	flag.IntVar(&extend, "extend", -1, "extend value")
 	flag.StringVar(&outputFile, "out", "", "output file")
 	flag.StringVar(&mode, "mode", "simple", "scoring mode")
 }
@@ -70,25 +74,25 @@ func main() {
 	}
 
 	// Создание обертки решения и непосредственно решение
-	nw := NewNeedlemanWunsch(seqs[0], seqs[1], sf, gap)
+	nw := NewNeedlemanWunsch(seqs[0], seqs[1], sf, gap, open, extend)
 	a, b, score := nw.Solve()
 	//nw.Print()
 
 	// Вывод в стандартный поток либо в файл, заданный через параметр
 	if outputFile == "" {
 		for i := 0; ; i += 100 {
-			if i + 100 > len(a) {
+			if i+100 > len(a) {
 				fmt.Println(a[i:])
 				break
 			}
-			fmt.Println(a[i:i+100])
+			fmt.Println(a[i : i+100])
 		}
 		for i := 0; i <= len(b); i += 100 {
-			if i + 100 > len(b) {
+			if i+100 > len(b) {
 				fmt.Println(b[i:])
 				break
 			}
-			fmt.Println(b[i:i+100])
+			fmt.Println(b[i : i+100])
 		}
 		fmt.Println("Score:", score)
 	} else {
@@ -96,14 +100,14 @@ func main() {
 		w := bufio.NewWriter(f)
 
 		for i := 0; ; i += 100 {
-			if i + 100 > len(a) {
+			if i+100 > len(a) {
 				fmt.Fprintln(w, a[i:])
 				break
 			}
 			fmt.Fprintln(w, a[i:i+100])
 		}
 		for i := 0; i <= len(b); i += 100 {
-			if i + 100 > len(b) {
+			if i+100 > len(b) {
 				fmt.Fprintln(w, b[i:])
 				break
 			}
